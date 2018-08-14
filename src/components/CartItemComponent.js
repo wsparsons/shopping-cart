@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CartItemComponent = ({item}) => {
+const CartItemComponent = ({ item }) => {
   return (
     <div className="list-group-item">
       <div className="row">
