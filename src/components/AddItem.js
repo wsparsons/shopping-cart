@@ -1,42 +1,42 @@
 import React, { Component } from 'react'
-import SelectItemComponent from './SelectItemComponent'
 
 class AddItem extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      product: {
-        id: '',
-        name: '',
-        priceInCents: ''
-      },
-      quantity: 0,
+      name: '',
+      quantity: ''
     }
   }
 
   onChange = (event) => {
-    console.log(event.target);
+    // console.log(event.target.value);
     this.setState({
-      product: {
-        id: event.target.id,
-        name: event.target.name,
-        priceInCents: event.target.price
-      },
-      quantity: event.target.quantity,
+      [event.target.name]: event.target.value
     })
   }
 
   onSubmit = (event) => {
     event.preventDefault()
-
+    this.props.getProduct({
+      name: this.state.product,
+      quantity: this.state.quantity
+    })
+    this.setState({
+      name: '',
+      quantity: ''
+    })
   }
 
   render () {
 
-    const products = this.props.products.map(product => <SelectItemComponent key={ product.id } product={ product }/>)
+    const products = this.props.products.map(product =>
+      <option
+        key={ product.id }
+        >{ product.name }</option>
+        )
 
     return (
-      <div className="container">
         <form onSubmit={ this.onSubmit }>
           <div className="form-group">
             <label>Quantity</label>
@@ -49,14 +49,13 @@ class AddItem extends Component {
           </div>
           <div className="form-group">
             <label>Products</label>
-            <select onChange={ this.onChange }  className="form-control">
+            <select onChange={ this.onChange } name='product' className="form-control">
               <option selected>Select an option...</option>
               { products }
             </select>
           </div>
+          <button type="submit" className="btn btn-primary">Submit</button>
         </form>
-        <button type="submit" className="btn btn-primary">Submit</button>
-      </div>
     )
   }
 }
