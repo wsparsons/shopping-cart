@@ -31,6 +31,7 @@ class CartItems extends Component {
   }
 
   render () {
+
     return (
       <div className="container">
         <h1>Cart Items</h1>
@@ -44,6 +45,7 @@ class CartItems extends Component {
           </div>
           { this.props.cartItemsList.map(item => <CartItemComponent key={item.id} item={ item }/> )}
         </div>
+        <p>Total Price: ${this.props.cartItemsList.reduce((total, item) => total + ((item.product.priceInCents * item.quantity)/100), 0 )}</p>
         <AddItem getProduct={ this.getProduct} products={ products }/>
       </div>
     )
