@@ -34,25 +34,20 @@ class App extends Component {
     return response.data
   }
 
-  findProduct = (item) => {
+  findProduct = async (item) => {
     const products = this.state.productsList.filter(product => product.name === item.name)
 
-    const addProduct = {
-      newProduct : products[0],
-      newQuantity : item.quantity
+    const postProduct = {
+      product_id : products[0].id,
+      quantity : item.quantity
     }
 
-    this.updateCartItem(addProduct)
+    const response = await axios.post('http://localhost:8082/api/items', postProduct)
+
+    this.setState({ cartItemsList: [ ...this.state.cartItemsList, response.data ]})
+
   }
 
-  updateCartItem = (product) => {
-    const newItem = {
-      id: (this.state.cartItemsList.length + 1 ),
-      product: product.newProduct,
-      quantity: product.newQuantity
-    }
-    this.setState({ cartItemsList: [ ...this.state.cartItemsList, newItem ]})
-  }
 
   render() {
     return (
