@@ -14,7 +14,7 @@ class App extends Component {
     }
   }
 
-  componentWillMount = async () => {
+  componentDidMount = async () => {
     const productsList = await this.getAllProducts()
     const cartItemsList = await this.getAllCartItems()
 
