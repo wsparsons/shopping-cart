@@ -1,20 +1,48 @@
 import React, { Component } from 'react';
 import CartHeader from './components/CartHeader'
 import CartItems from './components/CartItems'
-import AddItem from './components/AddItem'
 import CartFooter from './components/CartFooter'
+import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.css';
 
 class App extends Component {
   constructor () {
     super()
     this.state = {
-      cartItemsList: [
-        { id: 1, product: { id: 40, name: 'Mediocre Iron Watch', priceInCents: 399 }, quantity: 1 },
-        { id: 2, product: { id: 41, name: 'Heavy Duty Concrete Plate', priceInCents: 499 }, quantity: 2 },
-        { id: 3, product: { id: 42, name: 'Intelligent Paper Knife', priceInCents: 1999 }, quantity: 1 },
-      ]
+      cartItemsList: [],
+      productsList: []
     }
+  }
+
+  componentWillMount = async () => {
+    const productsList = await this.getAllProducts()
+    const cartItemsList = await this.getAllCartItems()
+
+    this.setState({
+      cartItemsList,
+      productsList,
+    })
+  }
+
+  getAllProducts = async () => {
+    const response = await axios.get('http://localhost:8082/api/products')
+    return response.data
+  }
+
+  getAllCartItems = async () => {
+    const response = await axios.get('http://localhost:8082/api/items')
+    return response.data
+  }
+
+  findProduct = (item) => {
+    const products = this.state.productsList.filter(product => product.name === item.name)
+
+    const addProduct = {
+      newProduct : products[0],
+      newQuantity : item.quantity
+    }
+
+    this.updateCartItem(addProduct)
   }
 
   updateCartItem = (product) => {
@@ -30,7 +58,7 @@ class App extends Component {
     return (
       <div>
         <CartHeader />
-        <CartItems updateCartItem={ this.updateCartItem } cartItemsList={ this.state.cartItemsList }/>
+        <CartItems findProduct={ this.findProduct } cartItemsList={ this.state.cartItemsList } productsList={ this.state.productsList }/>
         <CartFooter copyright="2016"/>
       </div>
     );
